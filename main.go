@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -20,9 +21,16 @@ func main() {
 			"bio":           "i am a vey hardworking engineer that loves basketball",
 		})
 	})
-	err := r.Run(":3031")
-	fmt.Println("started server at 3031")
+	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error loading .env file")
 	}
+
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
+	r.Run(":" + port)
 }
